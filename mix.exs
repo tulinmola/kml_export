@@ -21,6 +21,8 @@ defmodule Kml.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:httpoison, "~> 1.4"},
+      {:jason, "~> 1.1"},
       {:sweet_xml, "~> 0.6.6"},
       {:nimble_csv, "~> 0.6.0"}
       # {:dep_from_hexpm, "~> 0.3.0"},

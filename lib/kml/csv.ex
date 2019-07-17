@@ -7,22 +7,26 @@ defmodule Kml.Csv do
 
   @spec convert(folder) :: [any]
   def convert(folder) do
-    first = Enum.at(folder.placemarks, 0)
-    header = [get_names(first.data)]
-    content = Enum.map(folder.placemarks, &get_row/1)
+    names = get_names(folder.placemarks)
+    content = Enum.map(folder.placemarks, &get_row(names, &1))
 
-    FolderParser.dump_to_iodata(header ++ content)
+    FolderParser.dump_to_iodata([names] ++ content)
   end
 
-  defp get_names(data) do
-    Enum.map(data, fn {name, _value} -> name end)
+  defp get_names(placemarks) do
+    placemarks
+    |> Enum.reduce(%{}, fn placemark, result ->
+      names = Enum.map(placemark.data, fn {name, _value} -> {name, true} end)
+      Map.merge(result, Map.new(names))
+    end)
+    |> Map.keys()
   end
 
-  defp get_row(placemark) do
-    Enum.map(placemark.data, &get_value/1)
+  defp get_row(names, placemark) do
+    Enum.map(names, fn name ->
+      placemark.data
+      |> Map.new()
+      |> Map.get(name, nil)
+    end)
   end
-
-  defp get_value({_name, nil}), do: ""
-
-  defp get_value({_name, value}), do: value
 end

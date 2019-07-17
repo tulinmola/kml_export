@@ -1,6 +1,7 @@
 defmodule Kml do
   alias Kml.{Folder, Parser}
 
+  @type option :: {:place, boolean}
   @type folder :: Folder.t()
 
   @type t :: %Kml{
@@ -10,8 +11,8 @@ defmodule Kml do
 
   defstruct name: "", folders: []
 
-  @spec parse(binary) :: t
-  def parse(path) do
-    Parser.do_parse(path)
+  @spec parse(binary, [option]) :: t
+  def parse(path, opts) do
+    Parser.do_parse(path, opts)
   end
 end

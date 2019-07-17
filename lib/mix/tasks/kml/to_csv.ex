@@ -9,14 +9,14 @@ defmodule Mix.Tasks.Kml.ToCsv do
 
     {opts, [filename]} =
       OptionParser.parse!(argv,
-        strict: [output: :string],
-        aliases: [o: :output]
+        strict: [output: :string, places: :boolean],
+        aliases: [o: :output, p: :places]
       )
 
     output = Keyword.get(opts, :output, ".")
     ensure_exists(output)
 
-    kml = Kml.parse(filename)
+    kml = Kml.parse(filename, opts)
 
     Enum.each(kml.folders, &write_csv(kml, &1, output))
   end
